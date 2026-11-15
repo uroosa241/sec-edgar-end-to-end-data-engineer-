@@ -1,0 +1,16 @@
+environment: prod
+bundle_target: prod
+workspace:
+  mode: production
+  pause_status: PAUSED
+
+variables:
+  job_name: sec_edgar_medallion_silver_gold
+  catalog: sec_edgar
+  silver_schema: silver
+  gold_schema: gold
+  bronze_path: abfss://bronze@stdsecusa.dfs.core.windows.net/SEC_EDGAR/company_facts
+  silver_location: abfss://silver@stdsecusa.dfs.core.windows.net/SEC_EDGAR
+  gold_location: abfss://gold@stdsecusa.dfs.core.windows.net/SEC_EDGAR
+  full_refresh: "false"
+  notification_email: reynadalman.flores@gmail.com

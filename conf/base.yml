@@ -1,0 +1,39 @@
+project:
+  name: sec_edgar
+  repo_name: sec-edgar-end-to-end-data-engineer-
+  owner_email: reynadalman.flores@gmail.com
+  domain: sec_filings_financials
+
+platform:
+  catalog: sec_edgar
+  silver_schema: silver
+  gold_schema: gold
+  bronze_path: abfss://bronze@stdsecusa.dfs.core.windows.net/SEC_EDGAR/company_facts
+  silver_location: abfss://silver@stdsecusa.dfs.core.windows.net/SEC_EDGAR
+  gold_location: abfss://gold@stdsecusa.dfs.core.windows.net/SEC_EDGAR
+  external_locations:
+    bronze: bronze_usa
+    silver: silver_usa
+    gold: gold_usa
+
+jobs:
+  medallion_job_name: sec_edgar_medallion_silver_gold
+  schedule_cron_utc: 0 0 6 * * ?
+  schedule_timezone: UTC
+  pause_status: PAUSED
+  max_concurrent_runs: 1
+  silver_task_key: silver_company_facts
+  gold_task_key: gold_company_financials
+
+quality:
+  silver_audit_table: sec_edgar.silver.audit_runs
+  silver_dq_table: sec_edgar.silver.dq_results
+  gold_audit_table: sec_edgar.gold.audit_runs
+  gold_dq_table: sec_edgar.gold.dq_results
+
+security:
+  secret_contract:
+    databricks_host_env: DATABRICKS_HOST
+    databricks_token_env: DATABRICKS_TOKEN
+    databricks_http_path_env: DATABRICKS_HTTP_PATH
+    notification_email_env: NOTIFICATION_EMAIL

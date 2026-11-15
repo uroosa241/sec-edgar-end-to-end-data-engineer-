@@ -1,0 +1,67 @@
+version: 2
+
+sources:
+  - name: silver
+    description: SEC EDGAR silver layer created by the silver_usa notebook.
+    database: "{{ var('catalog') }}"
+    schema: "{{ var('silver_schema') }}"
+    tables:
+      - name: company_facts
+        description: Canonical SEC company facts after contract enforcement, quality rules, and deduplication.
+        columns:
+          - name: fact_id
+            tests:
+              - not_null
+              - unique
+          - name: cik
+            tests:
+              - not_null
+          - name: period_end
+            tests:
+              - not_null
+      - name: audit_runs
+        description: Silver pipeline run ledger.
+      - name: dq_results
+        description: Silver data-quality evidence.
+
+  - name: gold
+    description: SEC EDGAR gold layer created by the gold_usa notebook.
+    database: "{{ var('catalog') }}"
+    schema: "{{ var('gold_schema') }}"
+    tables:
+      - name: dim_company
+        description: Company dimension with fiscal-year alignment metadata.
+        columns:
+          - name: cik
+            tests:
+              - not_null
+              - unique
+      - name: company_financials_annual
+        description: Wide annual KPI table produced from the gold notebook.
+        columns:
+          - name: cik
+            tests:
+              - not_null
+          - name: fiscal_year
+            tests:
+              - not_null
+      - name: company_financials_quarterly
+        description: Wide quarterly KPI table produced from the gold notebook.
+        columns:
+          - name: cik
+            tests:
+              - not_null
+          - name: fiscal_year
+            tests:
+              - not_null
+          - name: fiscal_quarter
+            tests:
+              - not_null
+      - name: fact_financials_annual
+        description: Annual fact table with lineage and restatement metadata.
+      - name: fact_financials_quarterly
+        description: Quarterly fact table with lineage and derivation metadata.
+      - name: audit_runs
+        description: Gold pipeline run ledger.
+      - name: dq_results
+        description: Gold data-quality evidence.
