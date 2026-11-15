@@ -1,0 +1,67 @@
+bundle:
+  name: sec-edgar-end-to-end-data-engineer
+
+include:
+  - resources/*.yml
+
+variables:
+  job_name:
+    default: sec_edgar_medallion_silver_gold
+  catalog:
+    default: sec_edgar
+  silver_schema:
+    default: silver
+  gold_schema:
+    default: gold
+  bronze_path:
+    default: abfss://bronze@stdsecusa.dfs.core.windows.net/SEC_EDGAR/company_facts
+  silver_location:
+    default: abfss://silver@stdsecusa.dfs.core.windows.net/SEC_EDGAR
+  gold_location:
+    default: abfss://gold@stdsecusa.dfs.core.windows.net/SEC_EDGAR
+  notification_email:
+    default: reynadalman.flores@gmail.com
+  pause_status:
+    default: PAUSED
+  job_schedule:
+    default: 0 0 6 * * ?
+  schedule_timezone:
+    default: UTC
+  full_refresh:
+    default: "false"
+
+sync:
+  include:
+    - silver_usa.ipynb
+    - gold_usa.ipynb
+    - resources/*.yml
+    - conf/*.yml
+    - dbt/**/*
+    - profiles/**/*
+    - .github/workflows/*.yml
+    - README.md
+    - requirements.txt
+    - .env.example
+    - .gitignore
+    - packages.yml
+    - dbt_project.yml
+
+permissions:
+  - level: CAN_MANAGE
+    user_name: reynadalman.flores@gmail.com
+
+targets:
+  dev:
+    default: true
+    mode: development
+    variables:
+      job_name: sec_edgar_medallion_silver_gold_dev
+      pause_status: PAUSED
+      full_refresh: "false"
+
+  prod:
+    mode: production
+    variables:
+      job_name: sec_edgar_medallion_silver_gold
+      pause_status: PAUSED
+      full_refresh: "false"

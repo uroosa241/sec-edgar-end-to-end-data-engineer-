@@ -1,0 +1,27 @@
+name: sec_edgar
+version: 1.0.0
+config-version: 2
+profile: sec_edgar
+
+model-paths: ["dbt/models"]
+analysis-paths: ["dbt/analyses"]
+test-paths: ["dbt/tests"]
+seed-paths: ["dbt/seeds"]
+macro-paths: ["dbt/macros"]
+snapshot-paths: ["dbt/snapshots"]
+target-path: target
+clean-targets:
+  - target
+  - dbt_packages
+  - logs
+
+vars:
+  catalog: "{{ env_var('DBT_CATALOG', 'sec_edgar') }}"
+  silver_schema: "{{ env_var('DBT_SILVER_SCHEMA', 'silver') }}"
+  gold_schema: "{{ env_var('DBT_GOLD_SCHEMA', 'gold') }}"
+
+models:
+  sec_edgar:
+    +persist_docs:
+      relation: true
+      columns: true
